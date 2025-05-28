@@ -208,6 +208,251 @@ window.addEventListener('resize', adjustFogSize);
 
 
 
+<style>
+.bookicon {
+    cursor: pointer;
+    transition: transform .18s, filter .15s;
+    display: block;
+}
+.bookicon:hover, .bookicon:focus {
+    transform: scale(1.08);
+    filter: brightness(1.15) drop-shadow(0 2px 6px #fffbe2);
+    outline: none;
+}
+.modal-overlay {
+    display:none;
+    position:fixed;
+    top:0; left:0; z-index:1000;
+    width:100vw; height:100vh;
+    background:transparent;
+    justify-content:center; align-items:center; 
+    cursor:pointer;
+}
+.book-container {
+    width:520px; height:360px;
+    border-radius:8px;
+    position:relative;
+    perspective:1200px;
+    cursor:default;
+    max-width:98vw; max-height:96vh; opacity:1;
+    display: flex; justify-content: center; align-items: center;
+    box-sizing: border-box;
+}
+.book {
+    width:100%;height:100%; position:relative;
+}
+.page {
+    background-color:#fcf6dd;
+    color:#43300e;
+    padding:20px 8px 20px 8px;
+    font-size:21px;
+    line-height:1.65;
+    border:1.3px solid #d6b88c;
+    box-sizing:border-box; 
+    box-shadow:inset 0 0 11px rgba(0,0,0,0.07);
+    display:flex; flex-direction:column; justify-content:center; align-items:center;
+    writing-mode: vertical-rl; 
+    text-align: justify;
+    position:relative; font-family:"Kaiti TC", "DFKai-SB", "KaiTi", "楷体", serif;
+    min-height:310px;
+    min-width: 236px;
+    white-space: pre-wrap;
+    letter-spacing: 0.08em;
+    transition: font-size .3s;
+    overflow:hidden;
+    background-image: repeating-linear-gradient( 45deg, transparent 0 8px, rgba(195,170,102,0.035) 8px 16px);
+}
+.page-watermark {
+    position:absolute;
+    top:53%; left:50%;
+    transform:translate(-50%,-50%);
+    width:90px; height:90px;
+    opacity:0.07; pointer-events:none; z-index:0;
+}
+.page.stf__page--left::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; width: 14px; height: 100%;
+    background:linear-gradient(to right,rgba(110,82,35,0.13) 0%,rgba(160,123,61,0.09) 90%,transparent 100%);
+    z-index: 5;
+    pointer-events:none;
+    box-shadow:2px 0 8px 1px rgba(69,48,10,0.14);
+    border-right:1.5px dashed #bfa562;
+}
+.page.stf__page--right::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; width: 14px; height: 100%;
+    background:linear-gradient(to left,rgba(110,82,35,0.13) 0%,rgba(160,123,61,0.09) 90%,transparent 100%);
+    z-index: 5;
+    pointer-events:none;
+    box-shadow:-2px 0 8px 1px rgba(69,48,10,0.1);
+    border-left:1.5px dashed #bfa562;
+}
+.cover,.back-cover {
+    background:
+        repeating-linear-gradient(120deg,rgba(240,205,120,.022) 0 8px,rgba(181,115,39,0.08) 8px 24px),
+        repeating-linear-gradient(60deg,rgba(193,86,16,0.018) 0 15px,rgba(255,236,174,0.04) 15px 36px),
+        linear-gradient(135deg,#67411d 70%, #c0ac87 100%);
+    color:#ead5a0;
+    font-size:22px;
+    border: 2.5px solid #b29d63;
+    box-shadow:0 0 0 1.5px #ccbe8c,4px 0 17px rgba(0,0,0,0.23), inset 0 0 20px rgba(125,96,44,0.22);
+    position:relative; text-align:center;
+    font-weight:600; letter-spacing:3px;
+    overflow:hidden;
+    min-height:310px;
+}
+.cover::before, .back-cover::before {
+    content: '';
+    position:absolute;z-index:1;left:0;top:0;width:100%;height:100%;
+    background-image:
+        repeating-linear-gradient(135deg,rgba(156,117,30,.08) 0 1.5px,transparent 2px 30px),
+        repeating-linear-gradient(120deg,rgba(212,177,69,.07) 0 1.5px,transparent 2px 25px);
+    opacity:.23;
+    pointer-events:none;
+}
+.cover::after, .back-cover::after {
+    content:'';
+    position:absolute;left:5px;top:6px;right:5px;bottom:6px;z-index:2;
+    border:2px double #e7c97e;
+    border-radius:5px;
+    pointer-events:none; opacity:.88;
+}
+.cover h2, .back-cover h2 {
+    position:relative;z-index:3;margin:0;background:rgba(235,201,120,0.14);
+    border-radius:6px;padding:12px 18px;box-shadow:2px 3px 13px rgba(90,30,12,0.07);
+    font-size: 1.12em;
+    letter-spacing:5px;
+    font-family:"Kaiti TC", "DFKai-SB", "KaiTi", "楷体", serif;
+    writing-mode:vertical-rl;
+}
+.cover .lotus, .back-cover .lotus {
+    position: absolute;
+    width: 38px; height: 38px; opacity: .27; z-index:3;
+}
+.cover .top-left, .back-cover .top-left {top: 10px;left: 10px;}
+.cover .bottom-right, .back-cover .bottom-right {bottom: 10px;right: 10px;transform:rotate(180deg);}
+.page.stf__page--hard { box-shadow:0 0 16px 2px rgba(120,84,20,0.11)!important; }
+.stf__block--simple { display:none !important; }
+@media (max-width:560px){
+    .book-container {width:99vw; height:64vw; min-width:0; max-width:100vw; max-height:95vw;}
+    .page {font-size:18px; min-height:30vw; padding:15px 6px;} /* 增加内页字体大小并调整内边距 */
+    .cover, .back-cover {font-size:18px; min-height:30vw;}
+    .cover h2, .back-cover h2 {font-size:1em; padding:10px 14px;} /* 调整封面标题字体和内边距 */
+    .page-watermark {width:70px; height:70px;} /* 缩小水印尺寸 */
+    .cover .lotus, .back-cover .lotus {width:30px; height:30px;} /* 缩小莲花装饰尺寸 */
+}
+</style>
+<svg t="1748404761870" id="bookSvgIcon" class="bookicon" viewBox="0 0 1024 1024" version="1.1"
+    xmlns="http://www.w3.org/2000/svg" p-id="11179"
+    width="30" height="30" tabindex="0"
+    style="vertical-align:middle;">
+    <path d="M269.608949 205.858508l0-40.302915c0-10.869558-8.815783-19.685341-19.679202-19.685341-10.869558 0-19.668968 8.815783-19.668968 19.685341l0 399.728984c0 1.588171 0.23843 3.120061 0.588401 4.607948-0.022513 32.775474-0.033769 65.573461-0.044002 96.783277L216.831932 666.675802c-29.561269 0-53.743018 23.205515-55.458079 52.355415 0.021489 1.775436 0.044002 3.108804 0.066515 3.997034 0.011256 0.533143-0.077771 1.043772-0.110517 1.554402 1.194198 29.621645 25.603121 53.360302 55.503105 53.360302l14.005992 0c0.011256 14.744819 0.033769 28.024264 0.055259 39.34817l-17.042141 0c-1.022283 0-1.998517-0.13303-2.998287-0.288572-49.596582-3.108804-89.022523-44.322461-89.022523-94.684476 0-1.154289 0.13303-2.264577 0.166799-3.396353-0.599657-58.45125 0-502.935554 0.072655-551.310308-0.083911-0.682545-0.216941-1.354857-0.216941-2.043542 0-52.383044 42.612517-94.995561 94.990444-94.995561l31.448246 0 477.203496 0 4.807493 0c10.869558 0 19.685341 8.815783 19.685341 19.685341l0 75.444273L365.243053 165.701926C327.854515 165.67839 293.985126 181.093475 269.608949 205.858508z" p-id="11180" fill="#b39872"></path>
+    <path d="M883.644857 841.33882c-10.858302 0-19.674085 8.815783-19.674085 19.696598l0 54.381561L370.15083 915.416979c-29.910217 0-54.315046-23.736611-55.508221-53.337789 0.021489-0.533143 0.110517-1.043772 0.110517-1.575892-0.021489-0.86674-0.044002-2.220574-0.066515-3.997034 1.715061-29.134551 25.897833-52.338019 55.464219-52.338019l508.652765 0c1.554402 0 3.052522-0.222057 4.497431-0.577145 0.110517 0 0.233314 0.045025 0.343831 0.045025 10.858302 0 19.675108-8.815783 19.675108-19.675108l0-556.228317c0-10.869558-8.815783-19.679202-19.675108-19.679202l-4.818749 0L401.616472 208.0535l-31.44313 0c-52.383044 0-94.995561 42.612517-94.995561 94.978165 0 0.705058 0.138146 1.36509 0.215918 2.059915-0.066515 48.374754-0.671289 492.859058-0.066515 551.305191-0.033769 1.131777-0.171915 2.264577-0.171915 3.397377 0 50.362015 39.432081 91.575672 89.022523 94.684476 0.98749 0.154519 1.964748 0.311085 2.997264 0.311085l516.469801 0c10.880815 0 19.685341-8.815783 19.685341-19.675108l0-74.078159C903.330198 850.154603 894.524648 841.33882 883.644857 841.33882zM766.143723 657.505955c-6.375198 1.105171-13.365402 2.124384-20.951171 3.039219-7.592932 0.924045-18.146289 1.571798-31.654954 1.935072-13.513782 0.370437-21.028942 0.552585-22.544459 0.552585l-25.505907 0c-15.485693 0-29.228695 0.465604-41.218774 1.381463-11.999288 0.924045-23.911596 2.858094-35.753295 5.802146-1.216711 0.743944-3.345188 1.105171-6.376221 1.105171-4.859681 0-9.564843-1.657756-14.118556-4.972245-4.554736-3.315512-6.832615-6.994298-6.832615-11.05273 0-4.049223 2.733251-7.91732 8.198729-11.604292 1.210571-1.105171 4.247744-4.420683 9.108448-9.94756 6.980995-8.098445 13.052271-11.413957 18.218944-9.946536 3.032056 2.580778 6.604418 4.420683 10.703783 5.525853 4.098341 1.104147 7.969509 1.656733 11.614525 1.656733 1.821485 0 5.010107-0.181125 9.564843-0.552585 4.553713-0.36225 8.04114-0.551562 10.474562-0.551562 3.032056 0 5.308913 0.190335 6.832615 0.551562 2.12029-2.572592 3.643993-5.888104 4.554736-9.946536 0.910743-4.049223 1.366114-8.289804 1.366114-12.709463 0-2.573615-0.156566-6.716982-0.455371-12.43317-0.305969-5.706979-0.455371-10.033517-0.455371-12.985756 0-3.678786 0.149403-6.440689 0.455371-8.28878l-5.465478-6.631024c-6.077416 0-12.981662 0.370437-20.723997 1.105171-7.742335 0.74292-17.235546 2.580778-28.465309 5.525853-0.611937-1.839905-1.067308-3.678786-1.366114-5.525853-0.306992-1.838881-0.455371-3.678786-0.455371-5.525853 0-9.946536 4.099365-17.768689 12.298094-23.484877 8.197706-5.706979 17.45658-8.565073 27.78174-8.565073 6.376221 0 11.841699 1.105171 16.396435 3.315512l101.111862 3.314489c1.821485 4.420683 2.733251 8.842389 2.733251 13.263072 0 11.051707-4.554736 16.57756-13.664208 16.57756l-43.724851 0c-0.910743 4.058432-1.52268 7.55507-1.821485 10.499122-1.216711 8.842389-1.821485 17.682731-1.821485 26.52512 0 2.580778 0.149403 5.438872 0.455371 8.565073 0.298805 3.134387 0.455371 5.621021 0.455371 7.459902l2.732228 3.315512c30.060643 3.315512 60.121286 6.630001 90.180905 9.946536C788.006659 646.644583 780.718673 654.562926 766.143723 657.505955zM590.793042 375.129726c4.554736-5.525853 9.258874-8.841366 14.119579-9.946536 2.12029-2.210341 3.942799-3.868097 5.465478-4.973268 4.853541-3.315512 9.863648-4.973268 15.030321-4.973268 3.643993 0 7.742335 1.105171 12.298094 3.315512 1.210571 0 2.12029 0 2.733251 0 2.426259 0 4.852518-0.181125 7.286963-0.552585 6.980995 0 13.43601 0.466628 19.35686 1.381463 5.92085 0.924045 12.525268 2.857071 19.812231 5.802146 6.675026-6.259564 14.573927-9.393951 23.684422-9.393951 8.497535 0 13.358239 4.239558 14.573927 12.709463 3.943822 6.26775 5.92085 12.156878 5.92085 17.682731 0 9.584286-6.226818 19.340487-18.673292 29.288047-5.77247 4.420683-11.542894 8.66024-17.307178 12.709463 0 1.105171 0 1.848091 0 2.210341 0.604774 3.315512 2.426259 5.897314 5.465478 7.737218 15.784498 7.002484 29.148877 12.347213 40.079834 16.024975 33.398668 11.794627 64.674998 19.711947 93.824899 23.762193-4.553713 10.317996-8.809643 18.054191-12.752442 23.208585-12.147668 15.84385-26.116821 23.762193-41.902342 23.762193-3.643993 0-6.375198-0.181125-8.197706-0.552585-8.504698-2.944052-18.069541-8.469905-28.694529-16.57756-28.545126-21.361517-43.574425-32.413224-45.089941-33.156144-0.611937-0.36225-5.771447-4.782933-15.485693-13.262048-6.376221-5.525853-12.147668-7.736195-17.307178-6.631024-15.485693 14.367219-30.971385 28.735461-46.456055 43.10268-19.128663 15.47239-37.347606 23.208585-54.654784 23.208585-6.376221-3.677762-10.93198-6.631024-13.664208-8.841366-5.465478-4.049223-8.198729-8.841366-8.198729-14.367219 29.148877-11.786441 52.071959-23.390733 68.774363-34.8139 22.772656-15.47239 41.745776-34.8139 56.932664-58.022485 0.910743-5.154393 0.070608-8.652054-2.505054-10.499122-2.582825-1.838881-6.305613-2.762927-11.158131-2.762927-3.949962 0-6.682189 0-8.198729 0-6.682189 0.37146-12.147668 0.924045-16.396435 1.657756-13.664208 2.210341-25.505907 6.078439-35.526121 11.604292-6.682189-2.944052-10.019191-7.546883-10.019191-13.814634C583.96145 386.000308 586.238306 380.65558 590.793042 375.129726zM421.81756 462.439234c5.465478-4.782933 10.930957-9.575076 16.396435-14.367219 9.109472-10.30981 16.545838-18.97005 22.317285-25.972535 17.607006-21.731954 32.031531-42.912345 43.269479-63.548338 2.12029-2.210341 4.326539-3.678786 6.603395-4.420683 2.27788-0.733711 4.475941-1.105171 6.604418-1.105171 6.070252 0 11.386328 3.134387 15.941064 9.393951 4.553713 6.268774 6.831592 13.262048 6.831592 20.999266 0 9.584286-3.800559 16.767895-11.386328 21.551852-8.809643 6.631024-16.09763 12.347213-21.861914 17.130146-16.395412 13.633508-31.882128 27.820626-46.456055 42.550095 1.209548 3.686972 3.25923 6.26775 6.149047 7.736195 2.88163 1.476631 6.148024 2.210341 9.792017 2.210341 6.375198-0.36225 11.08036-0.552585 14.119579-0.552585 2.426259 0 4.247744 0.190335 5.465478 0.552585 3.942799-2.944052 7.130398-5.525853 9.564843-7.736195 14.872732-13.625322 27.170826-28.735461 36.892235-45.313022 5.465478-1.467421 10.396791-0.085958 14.802124 4.14439 4.39817 4.239558 8.576329 8.383948 12.525268 12.43317 0 9.584286-4.099365 18.054191-12.298094 25.418926-6.988158 5.897314-13.81975 11.794627-20.494777 17.682731-16.09763 16.949021-25.662473 27.076682-28.694529 30.393217-10.930957 12.528338-18.673292 24.505114-23.228027 35.919071 6.376221 0 18.823718-3.868097 37.347606-11.604292 8.803503-3.678786 16.239869-5.525853 22.318308-5.525853 2.732228 0.370437 4.704139 0.552585 5.92085 0.552585l8.198729 16.57756c-10.93198 9.584286-25.207102 17.320481-42.814108 23.209608-17.613146 5.897314-34.31555 11.423167-50.100048 16.57756-8.504698 1.105171-14.731516-2.762927-18.674315-11.604292-2.127454-4.420683-3.187599-9.757225-3.187599-16.025998 0-13.624299 4.554736-23.208585 13.664208-28.734438 1.515516-1.839905 2.732228-3.316535 3.643993-4.420683 5.465478-7.365758 9.714246-14.730493 12.752442-22.104437l-49.189306 3.315512-10.930957-23.209608C412.403143 476.444203 415.13537 469.070258 421.81756 462.439234zM389.024689 633.744785c4.248767-8.098445 11.229762-12.985756 20.951171-14.643512 9.714246-1.657756 19.128663-3.402493 28.238135-5.250584l122.973776-33.155121c1.210571-0.36225 2.733251-0.552585 4.554736-0.552585 5.764284 0 8.653077 3.686972 8.653077 11.05273 0 5.16258-1.594311 10.221806-4.78191 15.196097-3.188622 4.973268-6.910387 7.459902-11.158131 7.459902-6.989181 2.953262-13.970176 5.898337-20.952194 8.842389-20.039405 8.479115-37.503149 15.291265-52.377928 20.445658-25.207102 8.841366-48.12916 15.662725-68.774363 20.445658-3.643993 4.420683-7.443529 6.630001-11.386328 6.630001-4.554736 0-8.504698-2.944052-11.841699-8.841366-3.345188-5.889127-5.010107-12.339026-5.010107-19.340487C388.113947 638.355803 388.412752 635.591853 389.024689 633.744785z" p-id="11181" fill="#b39872"></path>
+</svg>
+<div class="modal-overlay" id="bookModal" onclick="closeBook()">
+    <div class="book-container" onclick="event.stopPropagation();">
+        <div class="book" id="book">
+            <!-- 封面 -->
+            <div class="page cover">
+                <h2>般若波羅蜜多心經</h2>
+                <img src="https://img.aihub.ren/i/2025/05/27/10xtgwk.png" class="lotus top-left" alt="Lotus">
+                <img src="https://img.aihub.ren/i/2025/05/27/10xtgwk.png" class="lotus bottom-right" alt="Lotus">
+            </div>
+            <div class="page">
+                <img src="https://img.aihub.ren/i/2025/05/27/10xtgwk.png" class="page-watermark" alt="Watermark Lotus">
+觀自在菩薩，行深般若波羅蜜多時，照見五蘊皆空，度一切苦厄。
+            </div>
+            <div class="page">
+                <img src="https://img.aihub.ren/i/2025/05/27/10xtgwk.png" class="page-watermark" alt="Watermark Lotus">
+舍利子，色不異空，空不異色，色即是空，空即是色，受想行識，亦復如是。
+            </div>
+            <div class="page">
+                 <img src="https://img.aihub.ren/i/2025/05/27/10xtgwk.png" class="page-watermark" alt="Watermark Lotus">
+舍利子，是諸法空相，不生不滅，不垢不淨，不增不減。
+            </div>
+            <div class="page">
+                 <img src="https://img.aihub.ren/i/2025/05/27/10xtgwk.png" class="page-watermark" alt="Watermark Lotus">
+是故空中無色，無受想行識，無眼耳鼻舌身意，無色聲香味觸法，無眼界，乃至無意識界。
+            </div>
+            <div class="page">
+                <img src="https://img.aihub.ren/i/2025/05/27/10xtgwk.png" class="page-watermark" alt="Watermark Lotus">
+無無明，亦無無明盡，乃至無老死，亦無老死盡。
+            </div>
+            <div class="page">
+                <img src="https://img.aihub.ren/i/2025/05/27/10xtgwk.png" class="page-watermark" alt="Watermark Lotus">
+無苦集滅道，無智亦無得。以無所得故，菩提薩埵，依般若波羅蜜多故，心無罣礙。
+            </div>
+            <div class="page">
+                <img src="https://img.aihub.ren/i/2025/05/27/10xtgwk.png" class="page-watermark" alt="Watermark Lotus">
+無罣礙故，無有恐怖，遠離顛倒夢想，究竟涅槃。
+            </div>
+            <div class="page">
+                <img src="https://img.aihub.ren/i/2025/05/27/10xtgwk.png" class="page-watermark" alt="Watermark Lotus">
+三世諸佛，依般若波羅蜜多故，得阿耨多羅三藐三菩提。
+            </div>
+            <div class="page">
+                <img src="https://img.aihub.ren/i/2025/05/27/10xtgwk.png" class="page-watermark" alt="Watermark Lotus">
+故知般若波羅蜜多，是大神咒，是大明咒，是無上咒，是無等等咒，能除一切苦，真實不虛。
+            </div>
+            <div class="page">
+                <img src="https://img.aihub.ren/i/2025/05/27/10xtgwk.png" class="page-watermark" alt="Watermark Lotus">
+故說般若波羅蜜多咒，即說咒曰：
+
+揭諦　揭諦　波羅揭諦
+波羅僧揭諦　菩提薩婆訶
+            </div>
+            <!-- 封底 -->
+            <div class="page back-cover">
+                <h2>圓滿</h2>
+                <img src="https://img.aihub.ren/i/2025/05/27/10xtgwk.png" class="lotus top-left" alt="Lotus">
+                <img src="https://img.aihub.ren/i/2025/05/27/10xtgwk.png" class="lotus bottom-right" alt="Lotus">
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.3/dist/js/page-flip.browser.min.js"></script>
+<script>
+let pageFlipInstance;
+function openBook() {
+    document.getElementById('bookModal').style.display = 'flex';
+    if(!pageFlipInstance) {
+        pageFlipInstance = new St.PageFlip(document.getElementById('book'), {
+            width: 260,
+            height: 360,
+            size: 'fixed',
+            maxShadowOpacity: 0.65,
+            showCover: true,
+            startPage: 0,
+            flippingTime: 800,
+            useMouseEvents: true,
+            swipeDistance: 30,
+            drawShadow:true,
+        });
+        pageFlipInstance.loadFromHTML(document.querySelectorAll('#book .page'));
+        pageFlipInstance.turnToPage(0);
+    }
+}
+function closeBook(){
+    document.getElementById('bookModal').style.display = 'none';
+}
+document.addEventListener('DOMContentLoaded',function(){
+    // 兼容js绑定，防止事件挂载问题。其实 svg 上已有 onclick，理论上可不写。
+    document.getElementById('bookModal').style.display='none';
+    var bookIcon = document.getElementById('bookSvgIcon');
+    if(bookIcon){
+      bookIcon.addEventListener('click', openBook);
+      bookIcon.addEventListener('keydown',function(e){
+        if(e.key==="Enter"||e.key===" ") openBook();
+      });
+    }
+});
+</script>
+
+
+
+
  <button onclick="stopp()" title="散华" class="flex items-center justify-center w-10 h-10 rounded-md border transition-colors hover:bg-slate/10">
   <svg t="1741420050225" class="icon" viewBox="0 0 1049 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1828" width="24" height="24">
     <path d="M525.584 573.347s268.831-2.63 309.364 193.243l-76.465 21.91 12.927 84.132a214.057 214.057 0 0 1-96.84-4.82a224.793 224.793 0 0 1-148.986-289.426z" fill="#EFC0C4" p-id="1829"></path>
