@@ -680,13 +680,38 @@ window.addEventListener('resize', adjustFogSize);
 }
         
 
-        function closeBook() {
-            document.getElementById('bookModal').style.display = 'none';
-            document.querySelector('.book-thumbnails').style.display = 'none';
-            document.getElementById('book1-container').style.display = 'none';
-            document.getElementById('book2-container').style.display = 'none';
-            currentBook = null;
-        }
+        ffunction closeBook() {
+    document.getElementById('bookModal').style.display = 'none';
+    document.querySelector('.book-thumbnails').style.display = 'none';
+
+    // 隐藏所有书本容器
+    document.getElementById('book1-container').style.display = 'none';
+    document.getElementById('book2-container').style.display = 'none';
+    document.getElementById('book3-container').style.display = 'none';
+
+    // **可选：销毁或重置当前的 St.PageFlip 实例**
+    // 这一步取决于 St.PageFlip 库是否提供了销毁或重置的方法
+    // 检查 St.PageFlip 的文档可以找到更精确的方法
+    if (currentBook === 'book1' && pageFlipInstance1) {
+        // if (pageFlipInstance1.destroy) { // 如果有 destroy 方法，使用它
+        //     pageFlipInstance1.destroy();
+        // }
+        pageFlipInstance1 = null; // 清空引用，下次打开 book1 时会重新创建实例
+    } else if (currentBook === 'book2' && pageFlipInstance2) {
+        // if (pageFlipInstance2.destroy) {
+        //     pageFlipInstance2.destroy();
+        // }
+        pageFlipInstance2 = null;
+    } else if (currentBook === 'book3' && pageFlipInstance3) {
+        // if (pageFlipInstance3.destroy) {
+        //     pageFlipInstance3.destroy();
+        // }
+        pageFlipInstance3 = null;
+    }
+
+    currentBook = null; // 清空当前书本的记录
+}
+
 
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('bookModal').style.display = 'none';
