@@ -560,7 +560,7 @@ window.addEventListener('resize', adjustFogSize);
                 </div>
                 <div class="page">
                     <img src="https://img.aihub.ren/i/2025/05/27/10xtgwk.png" class="page-watermark" alt="Watermark Lotus">
-    第三覺知：心無厭足，惟得多求，增長罪惡，菩薩不爾，常念知足，安貧守道，惟慧是業。
+    第三覺知：心無厭足，惟得多求，增長罪惡，菩萨不爾，常念知足，安貧守道，惟慧是業。
                 </div>
                 <div class="page">
                     <img src="https://img.aihub.ren/i/2025/05/27/10xtgwk.png" class="page-watermark" alt="Watermark Lotus">
@@ -568,11 +568,11 @@ window.addEventListener('resize', adjustFogSize);
                 </div>
                 <div class="page">
                     <img src="https://img.aihub.ren/i/2025/05/27/10xtgwk.png" class="page-watermark" alt="Watermark Lotus">
-    第五覺念：無明生死，菩薩常念，廣學多聞，增長智慧，成就辯才，教化一切，悉以大樂。
+    第五覺念：無明生死，菩萨常念，廣學多聞，增長智慧，成就辯才，教化一切，悉以大樂。
                 </div>
                 <div class="page">
                     <img src="https://img.aihub.ren/i/2025/05/27/10xtgwk.png" class="page-watermark" alt="Watermark Lotus">
-    第六覺知：貧苦多怨，橫結惡緣，菩薩布施，等念怨親，不念舊惡，不憎惡人。
+    第六覺知：貧苦多怨，橫結惡緣，菩萨布施，等念怨親，不念舊惡，不憎惡人。
                 </div>
                 <div class="page">
                     <img src="https://img.aihub.ren/i/2025/05/27/10xtgwk.png" class="page-watermark" alt="Watermark Lotus">
@@ -606,112 +606,82 @@ window.addEventListener('resize', adjustFogSize);
         }
 
         function openSpecificBook(bookId) {
-    // 隐藏缩略图列表
-    document.querySelector('.book-thumbnails').style.display = 'none';
+            // 隐藏缩略图列表
+            document.querySelector('.book-thumbnails').style.display = 'none';
 
-    // 隐藏所有书本容器，确保每次只显示一本
-    document.getElementById('book1-container').style.display = 'none';
-    document.getElementById('book2-container').style.display = 'none';
-    document.getElementById('book3-container').style.display = 'none';
+            // 隐藏所有书本容器，确保每次只显示一本
+            document.getElementById('book1-container').style.display = 'none';
+            document.getElementById('book2-container').style.display = 'none';
 
-    // 显示被点击的那个书本容器
-    const selectedBookContainer = document.getElementById(bookId + '-container');
-    selectedBookContainer.style.display = 'flex'; // 设置为 flex 让它显示出来
-    currentBook = bookId;
+            // 显示被点击的那个书本容器
+            const selectedBookContainer = document.getElementById(bookId + '-container');
+            selectedBookContainer.style.display = 'flex'; // 设置为 flex 让它显示出来
+            currentBook = bookId;
 
-    let pageFlipInstance;
-    let bookElement = document.getElementById(bookId);
+            let pageFlipInstance;
+            let bookElement = document.getElementById(bookId);
 
-    // 根据 bookId 选择对应的 pageFlip 实例
-    if (bookId === 'book1') {
-        // 如果实例不存在，就创建一个新的
-        if (!pageFlipInstance1) {
-            pageFlipInstance1 = new St.PageFlip(bookElement, {
-                width: 260,
-                height: 360,
-                size: 'fixed',
-                maxShadowOpacity: 0.65,
-                showCover: true,
-                startPage: 0,
-                flippingTime: 800,
-                useMouseEvents: true,
-                swipeDistance: 30,
-                drawShadow: true,
-            });
+            // 根据 bookId 选择对应的 pageFlip 实例
+            if (bookId === 'book1') {
+                // 如果实例不存在，就创建一个新的
+                if (!pageFlipInstance1) {
+                    pageFlipInstance1 = new St.PageFlip(bookElement, {
+                        width: 260,
+                        height: 360,
+                        size: 'fixed',
+                        maxShadowOpacity: 0.65,
+                        showCover: true,
+                        startPage: 0,
+                        flippingTime: 800,
+                        useMouseEvents: true,
+                        swipeDistance: 30,
+                        drawShadow: true,
+                    });
+                }
+                pageFlipInstance = pageFlipInstance1; // 使用 book1 的实例
+            } else if (bookId === 'book2') {
+                 // 如果实例不存在，就创建一个新的
+                if (!pageFlipInstance2) {
+                    pageFlipInstance2 = new St.PageFlip(bookElement, {
+                        width: 260,
+                        height: 360,
+                        size: 'fixed',
+                        maxShadowOpacity: 0.65,
+                        showCover: true,
+                        startPage: 0,
+                        flippingTime: 800,
+                        useMouseEvents: true,
+                        swipeDistance: 30,
+                        drawShadow: true,
+                    });
+                }
+                pageFlipInstance = pageFlipInstance2; // 使用 book2 的实例
+            }
+
+            // 关键修改：每次打开书本时都重新加载页面的 HTML 元素
+            pageFlipInstance.loadFromHTML(bookElement.querySelectorAll('.page'));
+
+            // 可选：跳转到书本的第一页
+            pageFlipInstance.turnToPage(0);
         }
-        pageFlipInstance = pageFlipInstance1; // 使用 book1 的实例
-    } else if (bookId === 'book2') {
-         // 如果实例不存在，就创建一个新的
-        if (!pageFlipInstance2) {
-            pageFlipInstance2 = new St.PageFlip(bookElement, {
-                width: 260,
-                height: 360,
-                size: 'fixed',
-                maxShadowOpacity: 0.65,
-                showCover: true,
-                startPage: 0,
-                flippingTime: 800,
-                useMouseEvents: true,
-                swipeDistance: 30,
-                drawShadow: true,
-            });
+
+        function closeBook() {
+            document.getElementById('bookModal').style.display = 'none';
+            document.querySelector('.book-thumbnails').style.display = 'none';
+
+            // 隐藏所有书本容器
+            document.getElementById('book1-container').style.display = 'none';
+            document.getElementById('book2-container').style.display = 'none';
+
+            // 可选：销毁或重置当前的 St.PageFlip 实例
+            if (currentBook === 'book1' && pageFlipInstance1) {
+                pageFlipInstance1 = null;
+            } else if (currentBook === 'book2' && pageFlipInstance2) {
+                pageFlipInstance2 = null;
+            }
+
+            currentBook = null;
         }
-        pageFlipInstance = pageFlipInstance2; // 使用 book2 的实例
-    } else if (bookId === 'book3') {
-        if (!pageFlipInstance3) {
-            pageFlipInstance3 = new St.PageFlip(bookElement, {
-                width: 260,
-                height: 360,
-                size: 'fixed',
-                maxShadowOpacity: 0.65,
-                showCover: true,
-                startPage: 0,
-                flippingTime: 800,
-                useMouseEvents: true,
-                swipeDistance: 30,
-                drawShadow: true,
-            });
-        }
-        pageFlipInstance = pageFlipInstance3; 
-    }
-    pageFlipInstance.loadFromHTML(bookElement.querySelectorAll('.page'));
-    pageFlipInstance.turnToPage(0);
-
-}
-        
-
-        ffunction closeBook() {
-    document.getElementById('bookModal').style.display = 'none';
-    document.querySelector('.book-thumbnails').style.display = 'none';
-
-    // 隐藏所有书本容器
-    document.getElementById('book1-container').style.display = 'none';
-    document.getElementById('book2-container').style.display = 'none';
-    document.getElementById('book3-container').style.display = 'none';
-
-    // **可选：销毁或重置当前的 St.PageFlip 实例**
-    // 这一步取决于 St.PageFlip 库是否提供了销毁或重置的方法
-    // 检查 St.PageFlip 的文档可以找到更精确的方法
-    if (currentBook === 'book1' && pageFlipInstance1) {
-        // if (pageFlipInstance1.destroy) { // 如果有 destroy 方法，使用它
-        //     pageFlipInstance1.destroy();
-        // }
-        pageFlipInstance1 = null; // 清空引用，下次打开 book1 时会重新创建实例
-    } else if (currentBook === 'book2' && pageFlipInstance2) {
-        // if (pageFlipInstance2.destroy) {
-        //     pageFlipInstance2.destroy();
-        // }
-        pageFlipInstance2 = null;
-    } else if (currentBook === 'book3' && pageFlipInstance3) {
-        // if (pageFlipInstance3.destroy) {
-        //     pageFlipInstance3.destroy();
-        // }
-        pageFlipInstance3 = null;
-    }
-
-    currentBook = null; // 清空当前书本的记录
-}
-
 
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('bookModal').style.display = 'none';
@@ -730,6 +700,7 @@ window.addEventListener('resize', adjustFogSize);
             });
         });
     </script>
+
 
  <button onclick="stopp()" title="散华" class="flex items-center justify-center w-10 h-10 rounded-md border transition-colors hover:bg-slate/10">
   <svg t="1741420050225" class="icon" viewBox="0 0 1049 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1828" width="24" height="24">
