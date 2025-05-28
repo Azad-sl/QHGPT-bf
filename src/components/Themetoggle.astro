@@ -658,7 +658,6 @@ window.addEventListener('resize', adjustFogSize);
         }
         pageFlipInstance = pageFlipInstance2; // 使用 book2 的实例
     } else if (bookId === 'book3') {
-         // 如果实例不存在，就创建一个新的
         if (!pageFlipInstance3) {
             pageFlipInstance3 = new St.PageFlip(bookElement, {
                 width: 260,
@@ -673,21 +672,13 @@ window.addEventListener('resize', adjustFogSize);
                 drawShadow: true,
             });
         }
-        pageFlipInstance = pageFlipInstance3; // 使用 book3 的实例
+        pageFlipInstance = pageFlipInstance3; 
     }
-
-    // **关键修改：每次打开书本时都重新加载页面的 HTML 元素**
-    // 这样可以确保 St.PageFlip 实例能够正确地处理当前显示的页面内容
     pageFlipInstance.loadFromHTML(bookElement.querySelectorAll('.page'));
-
-    // **可选：跳转到书本的第一页**
-    // 这可以确保每次打开书本时都从头开始
     pageFlipInstance.turnToPage(0);
 
-    // 确保书本元素是可见的，虽然容器已经设置为 flex，但这一步也可以增强显示效果
-    // bookElement.style.display = 'block'; // 或者根据 St.PageFlip 的要求设置 display
 }
-        }
+        
 
         function closeBook() {
             document.getElementById('bookModal').style.display = 'none';
