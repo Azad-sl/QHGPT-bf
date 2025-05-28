@@ -438,17 +438,24 @@ function closeBook(){
     document.getElementById('bookModal').style.display = 'none';
 }
 document.addEventListener('DOMContentLoaded',function(){
-    // 兼容js绑定，防止事件挂载问题。其实 svg 上已有 onclick，理论上可不写。
     document.getElementById('bookModal').style.display='none';
     var bookIcon = document.getElementById('bookSvgIcon');
     if(bookIcon){
-      bookIcon.addEventListener('click', openBook);
-      bookIcon.addEventListener('keydown',function(e){
-        if(e.key==="Enter"||e.key===" ") openBook();
-      });
+        bookIcon.addEventListener('click', openBook);
+        bookIcon.addEventListener('keydown',function(e){
+            if(e.key==="Enter"||e.key===" ") openBook();
+        });
     }
+    // 添加点击空白区域关闭书本的逻辑
+    var modalOverlay = document.getElementById('bookModal');
+    modalOverlay.addEventListener('click', function(e) {
+        if (e.target === modalOverlay) { // 确保只在点击空白区域时关闭
+            closeBook();
+        }
+    });
 });
 </script>
+
 
 
 
