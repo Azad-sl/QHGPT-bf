@@ -594,15 +594,18 @@ window.addEventListener('resize', adjustFogSize);
 
     <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.3/dist/js/page-flip.browser.min.js"></script>
     <script>
-        let pageFlipInstance1;
+               let pageFlipInstance1;
         let pageFlipInstance2;
+        let pageFlipInstance3;
         let currentBook = null;
 
         function openBook() {
             document.getElementById('bookModal').style.display = 'flex';
             document.querySelector('.book-thumbnails').style.display = 'flex';
+            // 隐藏所有书本容器，确保模态框打开时只显示缩略图
             document.getElementById('book1-container').style.display = 'none';
             document.getElementById('book2-container').style.display = 'none';
+            document.getElementById('book3-container').style.display = 'none';
         }
 
         function openSpecificBook(bookId) {
@@ -612,6 +615,7 @@ window.addEventListener('resize', adjustFogSize);
             // 隐藏所有书本容器，确保每次只显示一本
             document.getElementById('book1-container').style.display = 'none';
             document.getElementById('book2-container').style.display = 'none';
+            document.getElementById('book3-container').style.display = 'none';
 
             // 显示被点击的那个书本容器
             const selectedBookContainer = document.getElementById(bookId + '-container');
@@ -621,9 +625,8 @@ window.addEventListener('resize', adjustFogSize);
             let pageFlipInstance;
             let bookElement = document.getElementById(bookId);
 
-            // 根据 bookId 选择对应的 pageFlip 实例
+            // 根据 bookId 选择或创建对应的 pageFlip 实例
             if (bookId === 'book1') {
-                // 如果实例不存在，就创建一个新的
                 if (!pageFlipInstance1) {
                     pageFlipInstance1 = new St.PageFlip(bookElement, {
                         width: 260,
@@ -638,9 +641,8 @@ window.addEventListener('resize', adjustFogSize);
                         drawShadow: true,
                     });
                 }
-                pageFlipInstance = pageFlipInstance1; // 使用 book1 的实例
+                pageFlipInstance = pageFlipInstance1;
             } else if (bookId === 'book2') {
-                 // 如果实例不存在，就创建一个新的
                 if (!pageFlipInstance2) {
                     pageFlipInstance2 = new St.PageFlip(bookElement, {
                         width: 260,
@@ -655,50 +657,66 @@ window.addEventListener('resize', adjustFogSize);
                         drawShadow: true,
                     });
                 }
-                pageFlipInstance = pageFlipInstance2; // 使用 book2 的实例
-            }
-
-            // 关键修改：每次打开书本时都重新加载页面的 HTML 元素
-            pageFlipInstance.loadFromHTML(bookElement.querySelectorAll('.page'));
-
-            // 可选：跳转到书本的第一页
-            pageFlipInstance.turnToPage(0);
-        }
-
-        function closeBook() {
-            document.getElementById('bookModal').style.display = 'none';
-            document.querySelector('.book-thumbnails').style.display = 'none';
-
-            // 隐藏所有书本容器
-            document.getElementById('book1-container').style.display = 'none';
-            document.getElementById('book2-container').style.display = 'none';
-
-            // 可选：销毁或重置当前的 St.PageFlip 实例
-            if (currentBook === 'book1' && pageFlipInstance1) {
-                pageFlipInstance1 = null;
-            } else if (currentBook === 'book2' && pageFlipInstance2) {
-                pageFlipInstance2 = null;
-            }
-
-            currentBook = null;
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('bookModal').style.display = 'none';
-            var bookIcon = document.getElementById('bookSvgIcon');
-            if (bookIcon) {
-                bookIcon.addEventListener('click', openBook);
-                bookIcon.addEventListener('keydown', function(e) {
-                    if (e.key === "Enter" || e.key === " ") openBook();
-                });
-            }
-            var modalOverlay = document.getElementById('bookModal');
-            modalOverlay.addEventListener('click', function(e) {
-                if (e.target === modalOverlay) {
-                    closeBook();
+                pageFlipInstance = pageFlipInstance2;
+            } else if (bookId === 'book3') {
+                 if (!pageFlipInstance3) {
+                    pageFlipInstance3 = new St.PageFlip(bookElement, {
+                        width: 260,
+                        height: 360,
+                        size: 'fixed',
+                        maxShadowOpacity: 0.65,
+                        showCover: true,
+                        startPage: 0,
+                        flippingTime: 800,
+                        useMouseEvents: true,
+                        swipeDistance: 30,
+                        drawShadow: true,
+                    });
                 }
+                pageFlipInstance = pageFlipInstance3;
+            }
+
+            // 关键修改：无论实例是否已经创建，每次打开书本时都重新加载页面的 HTML 元素
+            // 确保 St.PageFlip 在容器可见后获取最新的页面信息
+             if (pageFlipInstance) { // 确保实例存在才调用
+                pageFlipInstance.loadFromHTML(bookElement.querySelectorAll('.page'));
+                pageFlipInstance.turnToPage(0); // 跳转到第一页
+             } else {
+                 console.error("PageFlip instance is not initialized for bookId:", bookId);
+             }
+        }
+
+    function closeBook() {
+        document.getElementById('bookModal').style.display = 'none';
+        document.querySelector('.book-thumbnails').style.display = 'none';
+        // 隐藏所有书本容器
+        document.getElementById('book1-container').style.display = 'none';
+        document.getElementById('book2-container').style.display = 'none';
+        document.getElementById('book3-container').style.display = 'none';
+
+        // 可选：重置 St.PageFlip 实例的状态，虽然不销毁
+        // 可以在 St.PageFlip 文档中查找是否有 reset 或 detach 方法
+        // 如果没有，简单地隐藏容器并重新加载页面通常就足够了
+        currentBook = null;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('bookModal').style.display = 'none';
+        var bookIcon = document.getElementById('bookSvgIcon');
+        if (bookIcon) {
+            bookIcon.addEventListener('click', openBook);
+            bookIcon.addEventListener('keydown', function(e) {
+                if (e.key === "Enter" || e.key === " ") openBook();
             });
+        }
+        var modalOverlay = document.getElementById('bookModal');
+        modalOverlay.addEventListener('click', function(e) {
+            if (e.target === modalOverlay) {
+                closeBook();
+            }
         });
+    });
+
     </script>
 
 
