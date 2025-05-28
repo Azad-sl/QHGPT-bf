@@ -606,40 +606,87 @@ window.addEventListener('resize', adjustFogSize);
         }
 
         function openSpecificBook(bookId) {
-            document.querySelector('.book-thumbnails').style.display = 'none';
-            document.getElementById(bookId + '-container').style.display = 'flex';
-            currentBook = bookId;
-            if (bookId === 'book1' && !pageFlipInstance1) {
-                pageFlipInstance1 = new St.PageFlip(document.getElementById('book1'), {
-                    width: 260,
-                    height: 360,
-                    size: 'fixed',
-                    maxShadowOpacity: 0.65,
-                    showCover: true,
-                    startPage: 0,
-                    flippingTime: 800,
-                    useMouseEvents: true,
-                    swipeDistance: 30,
-                    drawShadow: true,
-                });
-                pageFlipInstance1.loadFromHTML(document.querySelectorAll('#book1 .page'));
-                pageFlipInstance1.turnToPage(0);
-            } else if (bookId === 'book2' && !pageFlipInstance2) {
-                pageFlipInstance2 = new St.PageFlip(document.getElementById('book2'), {
-                    width: 260,
-                    height: 360,
-                    size: 'fixed',
-                    maxShadowOpacity: 0.65,
-                    showCover: true,
-                    startPage: 0,
-                    flippingTime: 800,
-                    useMouseEvents: true,
-                    swipeDistance: 30,
-                    drawShadow: true,
-                });
-                pageFlipInstance2.loadFromHTML(document.querySelectorAll('#book2 .page'));
-                pageFlipInstance2.turnToPage(0);
-            }
+    // 隐藏缩略图列表
+    document.querySelector('.book-thumbnails').style.display = 'none';
+
+    // 隐藏所有书本容器，确保每次只显示一本
+    document.getElementById('book1-container').style.display = 'none';
+    document.getElementById('book2-container').style.display = 'none';
+    document.getElementById('book3-container').style.display = 'none';
+
+    // 显示被点击的那个书本容器
+    const selectedBookContainer = document.getElementById(bookId + '-container');
+    selectedBookContainer.style.display = 'flex'; // 设置为 flex 让它显示出来
+    currentBook = bookId;
+
+    let pageFlipInstance;
+    let bookElement = document.getElementById(bookId);
+
+    // 根据 bookId 选择对应的 pageFlip 实例
+    if (bookId === 'book1') {
+        // 如果实例不存在，就创建一个新的
+        if (!pageFlipInstance1) {
+            pageFlipInstance1 = new St.PageFlip(bookElement, {
+                width: 260,
+                height: 360,
+                size: 'fixed',
+                maxShadowOpacity: 0.65,
+                showCover: true,
+                startPage: 0,
+                flippingTime: 800,
+                useMouseEvents: true,
+                swipeDistance: 30,
+                drawShadow: true,
+            });
+        }
+        pageFlipInstance = pageFlipInstance1; // 使用 book1 的实例
+    } else if (bookId === 'book2') {
+         // 如果实例不存在，就创建一个新的
+        if (!pageFlipInstance2) {
+            pageFlipInstance2 = new St.PageFlip(bookElement, {
+                width: 260,
+                height: 360,
+                size: 'fixed',
+                maxShadowOpacity: 0.65,
+                showCover: true,
+                startPage: 0,
+                flippingTime: 800,
+                useMouseEvents: true,
+                swipeDistance: 30,
+                drawShadow: true,
+            });
+        }
+        pageFlipInstance = pageFlipInstance2; // 使用 book2 的实例
+    } else if (bookId === 'book3') {
+         // 如果实例不存在，就创建一个新的
+        if (!pageFlipInstance3) {
+            pageFlipInstance3 = new St.PageFlip(bookElement, {
+                width: 260,
+                height: 360,
+                size: 'fixed',
+                maxShadowOpacity: 0.65,
+                showCover: true,
+                startPage: 0,
+                flippingTime: 800,
+                useMouseEvents: true,
+                swipeDistance: 30,
+                drawShadow: true,
+            });
+        }
+        pageFlipInstance = pageFlipInstance3; // 使用 book3 的实例
+    }
+
+    // **关键修改：每次打开书本时都重新加载页面的 HTML 元素**
+    // 这样可以确保 St.PageFlip 实例能够正确地处理当前显示的页面内容
+    pageFlipInstance.loadFromHTML(bookElement.querySelectorAll('.page'));
+
+    // **可选：跳转到书本的第一页**
+    // 这可以确保每次打开书本时都从头开始
+    pageFlipInstance.turnToPage(0);
+
+    // 确保书本元素是可见的，虽然容器已经设置为 flex，但这一步也可以增强显示效果
+    // bookElement.style.display = 'block'; // 或者根据 St.PageFlip 的要求设置 display
+}
         }
 
         function closeBook() {
