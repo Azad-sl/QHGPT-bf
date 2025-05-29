@@ -566,85 +566,147 @@ position: relative;
     }
 </style>
 <script>
-  const openQuoteModalButton = document.getElementById('openQuoteModalButton');
-  const quoteModal = document.getElementById('quoteModal');
-  const closeQuoteModalButton = document.getElementById('closeQuoteModalButton');
-  const modalQuoteDisplay = document.getElementById('modalQuoteDisplay');
+    // 将名言模态框相关的脚本放在一个立即执行函数表达式 (IIFE) 中，以创建独立作用域
+  (function() {
+      const openQuoteModalButton = document.getElementById('openQuoteModalButton');
+      const quoteModal = document.getElementById('quoteModal');
+      const closeQuoteModalButton = document.getElementById('closeQuoteModalButton');
+      const modalQuoteDisplay = document.getElementById('modalQuoteDisplay');
 
-  // 函数：打开模态框并获取名言
-  const openQuoteModal = async () => {
-    quoteModal.style.display = 'flex'; // 显示模态框
+      // 函数：打开模态框并获取名言
+      const openQuoteModal = async () => {
+        console.log('尝试打开名言模态框并获取名言...'); // 日志
+        if (!quoteModal) {
+            console.error('quoteModal 元素未找到！'); // 日志
+            return; // 安全检查
+        }
 
-    // 显示加载状态
-    modalQuoteDisplay.textContent = '加载中...';
-    modalQuoteDisplay.style.color = '#888'; // 加载状态颜色
+        quoteModal.style.display = 'flex'; // 显示模态框
 
-    try {
-      // 调用你的 API
-      const response = await fetch('https://bodhiapi.aihub.ren/api');
-
-      // 检查响应是否成功
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      // 解析 JSON 数据
-      const data = await response.json();
-
-      // 将名言显示在模态框中
-      modalQuoteDisplay.textContent = data.quote;
-      modalQuoteDisplay.style.color = '#43300e'; // 恢复正常颜色
-       // Dark mode text color adjustment for the quote text
-       if (document.documentElement.classList.contains('dark')) {
-            modalQuoteDisplay.style.color = '#fcf6dd';
+        // 显示加载状态
+        if (modalQuoteDisplay) {
+            modalQuoteDisplay.textContent = '加载中...';
+            modalQuoteDisplay.style.color = '#888'; // 加载状态颜色
+        } else {
+             console.error('modalQuoteDisplay 元素未找到！'); // 日志
         }
 
 
-    } catch (error) {
-      console.error('获取名言时出错:', error);
-      modalQuoteDisplay.textContent = '获取名言失败，请稍后再试。';
-      modalQuoteDisplay.style.color = 'red'; // 错误提示颜色
-    }
-  };
+        try {
+          console.log('正在 Fetch API:', 'https://bodhiapi.aihub.ren/api'); // 日志
+          // 调用你的 API
+          const response = await fetch('https://bodhiapi.aihub.ren/api');
 
-  // 函数：关闭模态框
-  const closeQuoteModal = () => {
-    quoteModal.style.display = 'none'; // 隐藏模态框
-  };
+          console.log('Fetch 响应已接收:', response); // 日志
 
-  // 事件监听器：点击图标按钮打开模态框
-  openQuoteModalButton.addEventListener('click', openQuoteModal);
+          // 检查响应状态码
+          if (!response.ok) {
+              console.error(`HTTP Error: status ${response.status}`); // 日志
+              // 尝试读取响应体，即使不是 JSON，以便排查
+              const errorText = await response.text();
+              console.error('HTTP Error Response Body:', errorText); // 日志
+              throw new Error(`HTTP error! status: ${response.status}`);
+          }
 
-  // 事件监听器：点击关闭按钮关闭模态框
-  closeQuoteModalButton.addEventListener('click', closeQuoteModal);
+          console.log('响应状态码正常，尝试解析 JSON...'); // 日志
 
-  // 事件监听器：点击模态框外部区域关闭模态框
-  quoteModal.addEventListener('click', (e) => {
-    if (e.target === quoteModal) { // 确保只在点击背景时关闭
-      closeQuoteModal();
-    }
-  });
+          // 解析 JSON 数据
+          const data = await response.json();
 
-  // 可选：按下 Escape 键关闭模态框
-  document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && quoteModal.style.display === 'flex') {
-          closeQuoteModal();
-      }
-  });
+          console.log('JSON 数据已解析:', data); // 日志
 
-   // 监听主题变化，调整名言文本颜色
-   const observer = new MutationObserver(() => {
-      if (document.documentElement.classList.contains('dark')) {
-          modalQuoteDisplay.style.color = '#fcf6dd';
+          // 将名言显示在模态框中
+          if (modalQuoteDisplay) {
+              modalQuoteDisplay.textContent = data.quote;
+              modalQuoteDisplay.style.color = '#43300e'; // 恢复正常颜色
+               // Dark mode text color adjustment for the quote text
+               if (document.documentElement.classList.contains('dark')) {
+                    modalQuoteDisplay.style.color = '#fcf6dd';
+                }
+          }
+
+
+        } catch (error) {
+          console.error('获取名言时出错:', error); // 日志
+          if (modalQuoteDisplay) {
+              modalQuoteDisplay.textContent = '获取名言失败，请稍后再试。';
+              modalQuoteDisplay.style.color = 'red'; // 错误提示颜色
+          }
+        }
+      };
+
+      // 函数：关闭模态框
+      const closeQuoteModal = () => {
+        console.log('尝试关闭名言模态框...'); // 日志
+        if (quoteModal) {
+            quoteModal.style.display = 'none'; // 隐藏模态框
+        }
+      };
+
+      // 事件监听器：点击图标按钮打开模态框
+      if (openQuoteModalButton) {
+          openQuoteModalButton.addEventListener('click', openQuoteModal);
+          console.log('已为 openQuoteModalButton 添加点击事件监听器'); // 日志
       } else {
-          modalQuoteDisplay.style.color = '#43300e';
+          console.error('openQuoteModalButton 元素未找到！'); // 日志
       }
-  });
 
-  observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-  });
+
+      // 事件监听器：点击关闭按钮关闭模态框
+      if (closeQuoteModalButton) {
+          closeQuoteModalButton.addEventListener('click', closeQuoteModal);
+          console.log('已为 closeQuoteModalButton 添加点击事件监听器'); // 日志
+      } else {
+           console.error('closeQuoteModalButton 元素未找到！'); // 日志
+      }
+
+
+      // 事件监听器：点击模态框外部区域关闭模态框
+      if (quoteModal) {
+          quoteModal.addEventListener('click', (e) => {
+            if (e.target === quoteModal) { // 确保只在点击背景时关闭
+              closeQuoteModal();
+            }
+          });
+          console.log('已为 quoteModal 添加外部点击事件监听器'); // 日志
+      }
+
+
+      // 可选：按下 Escape 键关闭模态框
+      document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && quoteModal && quoteModal.style.display === 'flex') {
+              closeQuoteModal();
+          }
+      });
+      console.log('已为 document 添加 keydown 事件监听器'); // 日志
+
+
+       // 监听主题变化，调整名言文本颜色
+       const observer = new MutationObserver(() => {
+            if (modalQuoteDisplay) {
+                if (document.documentElement.classList.contains('dark')) {
+                    modalQuoteDisplay.style.color = '#fcf6dd';
+                } else {
+                    modalQuoteDisplay.style.color = '#43300e';
+                }
+            }
+        });
+
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+        console.log('已创建 MutationObserver 监听主题变化'); // 日志
+
+        // 在 DOM 加载完成后执行初始化检查
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!openQuoteModalButton) console.error('DOMContentLoaded: openQuoteModalButton 未找到');
+            if (!quoteModal) console.error('DOMContentLoaded: quoteModal 未找到');
+            if (!closeQuoteModalButton) console.error('DOMContentLoaded: closeQuoteModalButton 未找到');
+            if (!modalQuoteDisplay) console.error('DOMContentLoaded: modalQuoteDisplay 未找到');
+        });
+
+  })();
 
 </script>
 
