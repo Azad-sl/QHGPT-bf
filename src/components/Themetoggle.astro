@@ -152,59 +152,7 @@ body, html {
     <svg class="fog-off-icon" t="1741508939096" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3381"><path d="M149.664595 299.16428l61.728699 724.83574 90.664026 0-63.65772-724.83574C193.067587 254.796778 149.664595 299.16428 149.664595 299.16428z" fill="#b8976d" p-id="3382"></path><path d="M871.118761 299.16428l-61.728699 724.83574-90.664026 0 63.65772-724.83574C827.715769 254.796778 871.118761 299.16428 871.118761 299.16428z" fill="#b8976d" p-id="3383"></path><path d="M555.723691 253.655761l2.411277 770.344259-90.664026 0-0.482255-770.344259C512.3207 209.926765 555.723691 253.655761 555.723691 253.655761z" fill="#b8976d" p-id="3384"></path><path d="M118.800246 116.871717" fill="#b8976d" p-id="3385"></path><path d="M89.864919 132.303891" fill="#b8976d" p-id="3386"></path><path d="M99.104933 115.629427c0 0 39.744601 0.964511 39.744601 34.240138 0 33.275627 34.147544 32.793371 38.065388 32.793371 3.918808 0-27.429726-0.964511-27.429726-33.516754 0 0-6.157438-40.435191-50.940644-34.082922" fill="#b8976d" p-id="3387"></path><path d="M99.104933 214.528447c0 0 39.744601 0.964511 39.744601 34.240138 0 33.275627 34.147544 32.793371 38.065388 32.793371 3.918808 0-27.429726-0.964511-27.429726-33.516754 0 0-6.157438-40.435191-50.940644-34.082922" fill="#b8976d" p-id="3388"></path><path d="M204.295458 194.567894c0 0-17.59075 22.218473 9.475355 45.298255 27.06707 23.078817 10.887399 41.259848 9.076048 43.383701-1.811352 2.125782 11.897242-15.541164-14.581476-38.118436 0 0-30.043551-31.384221-4.17151-51.259897" fill="#b8976d" p-id="3389"></path><path d="M446.532375 61.319746" fill="#b8976d" p-id="3390"></path><path d="M417.597047 76.751921" fill="#b8976d" p-id="3391"></path><path d="M482.862607 72.1377c0 0 34.493804 19.768616 18.652677 49.031877-15.841127 29.263261 14.418474 45.094743 17.863707 46.960107 3.446198 1.865364-23.663311-13.905354-8.166514-42.533002 0 0 13.83398-38.490737-28.573636-54.222875" fill="#b8976d" p-id="3392"></path><path d="M441.840994 146.915267c0 0 36.540496 15.665586 24.174502 46.557906-12.365994 30.893285 19.514949 43.134857 23.15212 44.591269 3.638135 1.456411-25.107184-11.088017-13.009323-41.310003 0 0 9.309459-39.828514-34.626906-50.573165" fill="#b8976d" p-id="3393"></path><path d="M575.588758 141.142669c0 0-27.86472 5.163991-22.659255 40.351279 5.204501 35.187287-18.941065 38.238035-21.70246 38.646023-2.761395 0.409917 19.184122-3.879263 14.09054-38.301693 0 0-1.983999-43.401062 30.576925-41.352441" fill="#b8976d" p-id="3394"></path><path d="M782.314312 98.424481" fill="#b8976d" p-id="3395"></path><path d="M753.378984 113.856656" fill="#b8976d" p-id="3396"></path><path d="M833.141143 79.302088c0 0 26.746852 29.413725 2.679411 52.391268-24.06937 22.978508-0.140819 47.343018 2.564635 50.177716 2.707382 2.834698-18.242759-20.505502 5.301917-42.983429 0 0 24.9953-32.375738-10.523779-60.381277" fill="#b8976d" p-id="3397"></path><path d="M771.595702 166.420571c0 0-16.26069 32.393099 13.071052 48.106911 29.330777 15.714776 14.205317 42.926523 12.518387 46.075651-1.68693 3.149128 10.958773-22.496253-17.734462-37.869592 0 0-32.99206-24.043328-8.111537-57.030566" fill="#b8976d" p-id="3398"></path><path d="M879.40198 203.07488c0 0-24.731989 13.837838-8.503128 45.491157 16.226932 31.652355-5.65975 42.294768-8.14433 43.567923-2.48458 1.275083 16.922344-9.833189 1.046494-40.798812 0 0-15.814121-40.465091 15.681018-48.980758" fill="#b8976d" p-id="3399"></path></svg>
   </div>
 </div>
-<script>
-// 获取DOM元素
-const fogEffect = document.getElementById('fogEffect');
-const fogToggle = document.getElementById('fogToggle');
-let fogEnabled = false;
 
-// 预加载图片以提高性能
-function preloadImages() {
-  const imageUrls = ['fog-1.png', 'fog-2.png'];
-  imageUrls.forEach(url => {
-    const img = new Image();
-    img.src = url;
-  });
-}
-
-// 调整烟雾元素以完全覆盖屏幕
-function adjustFogSize() {
-  const vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty('--vh', `${vh}px`);
-  
-  // 根据设备高度调整烟雾覆盖
-  if (window.innerWidth <= 768) {
-    // 移动设备
-    fogEffect.style.top = '-30vh';
-    fogEffect.style.height = '160vh';
-  } else {
-    // 桌面设备
-    fogEffect.style.top = '-20vh';
-    fogEffect.style.height = '140vh';
-  }
-}
-
-// 点击图标切换烟雾效果
-fogToggle.addEventListener('click', function() {
-  fogEnabled = !fogEnabled;
-  if (fogEnabled) {
-    fogEffect.style.display = 'block';
-    fogToggle.classList.add('active');
-    adjustFogSize(); // 调整尺寸确保覆盖
-  } else {
-    fogEffect.style.display = 'none';
-    fogToggle.classList.remove('active');
-  }
-});
-
-// 在页面加载和窗口尺寸变化时调整烟雾尺寸
-window.addEventListener('load', function() {
-  preloadImages();
-  adjustFogSize();
-});
-
-window.addEventListener('resize', adjustFogSize);
-</script>
 
 
 
@@ -408,49 +356,6 @@ position: relative;
         </div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.3/dist/js/page-flip.browser.min.js"></script>
-<script>
-let pageFlipInstance;
-function openBook() {
-    document.getElementById('bookModal').style.display = 'flex';
-    if(!pageFlipInstance) {
-        pageFlipInstance = new St.PageFlip(document.getElementById('book'), {
-            width: 260,
-            height: 360,
-            size: 'fixed',
-            maxShadowOpacity: 0.65,
-            showCover: true,
-            startPage: 0,
-            flippingTime: 800,
-            useMouseEvents: true,
-            swipeDistance: 30,
-            drawShadow:true,
-        });
-        pageFlipInstance.loadFromHTML(document.querySelectorAll('#book .page'));
-        pageFlipInstance.turnToPage(0);
-    }
-}
-function closeBook(){
-    document.getElementById('bookModal').style.display = 'none';
-}
-document.addEventListener('DOMContentLoaded',function(){
-    document.getElementById('bookModal').style.display='none';
-    var bookIcon = document.getElementById('bookSvgIcon');
-    if(bookIcon){
-        bookIcon.addEventListener('click', openBook);
-        bookIcon.addEventListener('keydown',function(e){
-            if(e.key==="Enter"||e.key===" ") openBook();
-        });
-    }
-    // 添加点击空白区域关闭书本的逻辑
-    var modalOverlay = document.getElementById('bookModal');
-    modalOverlay.addEventListener('click', function(e) {
-        if (e.target === modalOverlay) { // 确保只在点击空白区域时关闭
-            closeBook();
-        }
-    });
-});
-</script>
 
 
 
@@ -565,151 +470,6 @@ position: relative;
         fill: #ead5a0; /* Adjust icon color for dark mode */
     }
 </style>
-<script>
-    // 将名言模态框相关的脚本放在一个立即执行函数表达式 (IIFE) 中，以创建独立作用域
-  (function() {
-      const openQuoteModalButton = document.getElementById('openQuoteModalButton');
-      const quoteModal = document.getElementById('quoteModal');
-      const closeQuoteModalButton = document.getElementById('closeQuoteModalButton');
-      const modalQuoteDisplay = document.getElementById('modalQuoteDisplay');
-
-      // 函数：打开模态框并获取名言
-      const openQuoteModal = async () => {
-        console.log('尝试打开名言模态框并获取名言...'); // 日志
-        if (!quoteModal) {
-            console.error('quoteModal 元素未找到！'); // 日志
-            return; // 安全检查
-        }
-
-        quoteModal.style.display = 'flex'; // 显示模态框
-
-        // 显示加载状态
-        if (modalQuoteDisplay) {
-            modalQuoteDisplay.textContent = '加载中...';
-            modalQuoteDisplay.style.color = '#888'; // 加载状态颜色
-        } else {
-             console.error('modalQuoteDisplay 元素未找到！'); // 日志
-        }
-
-
-        try {
-          console.log('正在 Fetch API:', 'https://bodhiapi.aihub.ren/api'); // 日志
-          // 调用你的 API
-          const response = await fetch('https://bodhiapi.aihub.ren/api');
-
-          console.log('Fetch 响应已接收:', response); // 日志
-
-          // 检查响应状态码
-          if (!response.ok) {
-              console.error(`HTTP Error: status ${response.status}`); // 日志
-              // 尝试读取响应体，即使不是 JSON，以便排查
-              const errorText = await response.text();
-              console.error('HTTP Error Response Body:', errorText); // 日志
-              throw new Error(`HTTP error! status: ${response.status}`);
-          }
-
-          console.log('响应状态码正常，尝试解析 JSON...'); // 日志
-
-          // 解析 JSON 数据
-          const data = await response.json();
-
-          console.log('JSON 数据已解析:', data); // 日志
-
-          // 将名言显示在模态框中
-          if (modalQuoteDisplay) {
-              modalQuoteDisplay.textContent = data.quote;
-              modalQuoteDisplay.style.color = '#43300e'; // 恢复正常颜色
-               // Dark mode text color adjustment for the quote text
-               if (document.documentElement.classList.contains('dark')) {
-                    modalQuoteDisplay.style.color = '#fcf6dd';
-                }
-          }
-
-
-        } catch (error) {
-          console.error('获取名言时出错:', error); // 日志
-          if (modalQuoteDisplay) {
-              modalQuoteDisplay.textContent = '获取名言失败，请稍后再试。';
-              modalQuoteDisplay.style.color = 'red'; // 错误提示颜色
-          }
-        }
-      };
-
-      // 函数：关闭模态框
-      const closeQuoteModal = () => {
-        console.log('尝试关闭名言模态框...'); // 日志
-        if (quoteModal) {
-            quoteModal.style.display = 'none'; // 隐藏模态框
-        }
-      };
-
-      // 事件监听器：点击图标按钮打开模态框
-      if (openQuoteModalButton) {
-          openQuoteModalButton.addEventListener('click', openQuoteModal);
-          console.log('已为 openQuoteModalButton 添加点击事件监听器'); // 日志
-      } else {
-          console.error('openQuoteModalButton 元素未找到！'); // 日志
-      }
-
-
-      // 事件监听器：点击关闭按钮关闭模态框
-      if (closeQuoteModalButton) {
-          closeQuoteModalButton.addEventListener('click', closeQuoteModal);
-          console.log('已为 closeQuoteModalButton 添加点击事件监听器'); // 日志
-      } else {
-           console.error('closeQuoteModalButton 元素未找到！'); // 日志
-      }
-
-
-      // 事件监听器：点击模态框外部区域关闭模态框
-      if (quoteModal) {
-          quoteModal.addEventListener('click', (e) => {
-            if (e.target === quoteModal) { // 确保只在点击背景时关闭
-              closeQuoteModal();
-            }
-          });
-          console.log('已为 quoteModal 添加外部点击事件监听器'); // 日志
-      }
-
-
-      // 可选：按下 Escape 键关闭模态框
-      document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape' && quoteModal && quoteModal.style.display === 'flex') {
-              closeQuoteModal();
-          }
-      });
-      console.log('已为 document 添加 keydown 事件监听器'); // 日志
-
-
-       // 监听主题变化，调整名言文本颜色
-       const observer = new MutationObserver(() => {
-            if (modalQuoteDisplay) {
-                if (document.documentElement.classList.contains('dark')) {
-                    modalQuoteDisplay.style.color = '#fcf6dd';
-                } else {
-                    modalQuoteDisplay.style.color = '#43300e';
-                }
-            }
-        });
-
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        });
-        console.log('已创建 MutationObserver 监听主题变化'); // 日志
-
-        // 在 DOM 加载完成后执行初始化检查
-        document.addEventListener('DOMContentLoaded', () => {
-            if (!openQuoteModalButton) console.error('DOMContentLoaded: openQuoteModalButton 未找到');
-            if (!quoteModal) console.error('DOMContentLoaded: quoteModal 未找到');
-            if (!closeQuoteModalButton) console.error('DOMContentLoaded: closeQuoteModalButton 未找到');
-            if (!modalQuoteDisplay) console.error('DOMContentLoaded: modalQuoteDisplay 未找到');
-        });
-
-  })();
-
-</script>
-
 
 
 
@@ -952,5 +712,247 @@ button[onclick="stopp()"] {
     .addEventListener('click', handleToggleClick)
 </script>
 
+
+<script>
+    // 将名言模态框相关的脚本放在一个立即执行函数表达式 (IIFE) 中，以创建独立作用域
+  (function() {
+      const openQuoteModalButton = document.getElementById('openQuoteModalButton');
+      const quoteModal = document.getElementById('quoteModal');
+      const closeQuoteModalButton = document.getElementById('closeQuoteModalButton');
+      const modalQuoteDisplay = document.getElementById('modalQuoteDisplay');
+
+      // 函数：打开模态框并获取名言
+      const openQuoteModal = async () => {
+        console.log('尝试打开名言模态框并获取名言...'); // 日志
+        if (!quoteModal) {
+            console.error('quoteModal 元素未找到！'); // 日志
+            return; // 安全检查
+        }
+
+        quoteModal.style.display = 'flex'; // 显示模态框
+
+        // 显示加载状态
+        if (modalQuoteDisplay) {
+            modalQuoteDisplay.textContent = '加载中...';
+            modalQuoteDisplay.style.color = '#888'; // 加载状态颜色
+        } else {
+             console.error('modalQuoteDisplay 元素未找到！'); // 日志
+        }
+
+
+        try {
+          console.log('正在 Fetch API:', 'https://bodhiapi.aihub.ren/api'); // 日志
+          // 调用你的 API
+          const response = await fetch('https://bodhiapi.aihub.ren/api');
+
+          console.log('Fetch 响应已接收:', response); // 日志
+
+          // 检查响应状态码
+          if (!response.ok) {
+              console.error(`HTTP Error: status ${response.status}`); // 日志
+              // 尝试读取响应体，即使不是 JSON，以便排查
+              const errorText = await response.text();
+              console.error('HTTP Error Response Body:', errorText); // 日志
+              throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          console.log('响应状态码正常，尝试解析 JSON...'); // 日志
+
+          // 解析 JSON 数据
+          const data = await response.json();
+
+          console.log('JSON 数据已解析:', data); // 日志
+
+          // 将名言显示在模态框中
+          if (modalQuoteDisplay) {
+              modalQuoteDisplay.textContent = data.quote;
+              modalQuoteDisplay.style.color = '#43300e'; // 恢复正常颜色
+               // Dark mode text color adjustment for the quote text
+               if (document.documentElement.classList.contains('dark')) {
+                    modalQuoteDisplay.style.color = '#fcf6dd';
+                }
+          }
+
+
+        } catch (error) {
+          console.error('获取名言时出错:', error); // 日志
+          if (modalQuoteDisplay) {
+              modalQuoteDisplay.textContent = '获取名言失败，请稍后再试。';
+              modalQuoteDisplay.style.color = 'red'; // 错误提示颜色
+          }
+        }
+      };
+
+      // 函数：关闭模态框
+      const closeQuoteModal = () => {
+        console.log('尝试关闭名言模态框...'); // 日志
+        if (quoteModal) {
+            quoteModal.style.display = 'none'; // 隐藏模态框
+        }
+      };
+
+      // 事件监听器：点击图标按钮打开模态框
+      if (openQuoteModalButton) {
+          openQuoteModalButton.addEventListener('click', openQuoteModal);
+          console.log('已为 openQuoteModalButton 添加点击事件监听器'); // 日志
+      } else {
+          console.error('openQuoteModalButton 元素未找到！'); // 日志
+      }
+
+
+      // 事件监听器：点击关闭按钮关闭模态框
+      if (closeQuoteModalButton) {
+          closeQuoteModalButton.addEventListener('click', closeQuoteModal);
+          console.log('已为 closeQuoteModalButton 添加点击事件监听器'); // 日志
+      } else {
+           console.error('closeQuoteModalButton 元素未找到！'); // 日志
+      }
+
+
+      // 事件监听器：点击模态框外部区域关闭模态框
+      if (quoteModal) {
+          quoteModal.addEventListener('click', (e) => {
+            if (e.target === quoteModal) { // 确保只在点击背景时关闭
+              closeQuoteModal();
+            }
+          });
+          console.log('已为 quoteModal 添加外部点击事件监听器'); // 日志
+      }
+
+
+      // 可选：按下 Escape 键关闭模态框
+      document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && quoteModal && quoteModal.style.display === 'flex') {
+              closeQuoteModal();
+          }
+      });
+      console.log('已为 document 添加 keydown 事件监听器'); // 日志
+
+
+       // 监听主题变化，调整名言文本颜色
+       const observer = new MutationObserver(() => {
+            if (modalQuoteDisplay) {
+                if (document.documentElement.classList.contains('dark')) {
+                    modalQuoteDisplay.style.color = '#fcf6dd';
+                } else {
+                    modalQuoteDisplay.style.color = '#43300e';
+                }
+            }
+        });
+
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+        console.log('已创建 MutationObserver 监听主题变化'); // 日志
+
+        // 在 DOM 加载完成后执行初始化检查
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!openQuoteModalButton) console.error('DOMContentLoaded: openQuoteModalButton 未找到');
+            if (!quoteModal) console.error('DOMContentLoaded: quoteModal 未找到');
+            if (!closeQuoteModalButton) console.error('DOMContentLoaded: closeQuoteModalButton 未找到');
+            if (!modalQuoteDisplay) console.error('DOMContentLoaded: modalQuoteDisplay 未找到');
+        });
+
+  })();
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.3/dist/js/page-flip.browser.min.js"></script>
+<script>
+let pageFlipInstance;
+function openBook() {
+    document.getElementById('bookModal').style.display = 'flex';
+    if(!pageFlipInstance) {
+        pageFlipInstance = new St.PageFlip(document.getElementById('book'), {
+            width: 260,
+            height: 360,
+            size: 'fixed',
+            maxShadowOpacity: 0.65,
+            showCover: true,
+            startPage: 0,
+            flippingTime: 800,
+            useMouseEvents: true,
+            swipeDistance: 30,
+            drawShadow:true,
+        });
+        pageFlipInstance.loadFromHTML(document.querySelectorAll('#book .page'));
+        pageFlipInstance.turnToPage(0);
+    }
+}
+function closeBook(){
+    document.getElementById('bookModal').style.display = 'none';
+}
+document.addEventListener('DOMContentLoaded',function(){
+    document.getElementById('bookModal').style.display='none';
+    var bookIcon = document.getElementById('bookSvgIcon');
+    if(bookIcon){
+        bookIcon.addEventListener('click', openBook);
+        bookIcon.addEventListener('keydown',function(e){
+            if(e.key==="Enter"||e.key===" ") openBook();
+        });
+    }
+    // 添加点击空白区域关闭书本的逻辑
+    var modalOverlay = document.getElementById('bookModal');
+    modalOverlay.addEventListener('click', function(e) {
+        if (e.target === modalOverlay) { // 确保只在点击空白区域时关闭
+            closeBook();
+        }
+    });
+});
+</script>
+<script>
+// 获取DOM元素
+const fogEffect = document.getElementById('fogEffect');
+const fogToggle = document.getElementById('fogToggle');
+let fogEnabled = false;
+
+// 预加载图片以提高性能
+function preloadImages() {
+  const imageUrls = ['fog-1.png', 'fog-2.png'];
+  imageUrls.forEach(url => {
+    const img = new Image();
+    img.src = url;
+  });
+}
+
+// 调整烟雾元素以完全覆盖屏幕
+function adjustFogSize() {
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+  
+  // 根据设备高度调整烟雾覆盖
+  if (window.innerWidth <= 768) {
+    // 移动设备
+    fogEffect.style.top = '-30vh';
+    fogEffect.style.height = '160vh';
+  } else {
+    // 桌面设备
+    fogEffect.style.top = '-20vh';
+    fogEffect.style.height = '140vh';
+  }
+}
+
+// 点击图标切换烟雾效果
+fogToggle.addEventListener('click', function() {
+  fogEnabled = !fogEnabled;
+  if (fogEnabled) {
+    fogEffect.style.display = 'block';
+    fogToggle.classList.add('active');
+    adjustFogSize(); // 调整尺寸确保覆盖
+  } else {
+    fogEffect.style.display = 'none';
+    fogToggle.classList.remove('active');
+  }
+});
+
+// 在页面加载和窗口尺寸变化时调整烟雾尺寸
+window.addEventListener('load', function() {
+  preloadImages();
+  adjustFogSize();
+});
+
+window.addEventListener('resize', adjustFogSize);
+</script>
 
 </div>
