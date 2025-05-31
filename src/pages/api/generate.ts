@@ -1,12 +1,10 @@
 import type { APIRoute } from 'astro'
 import { generatePayload, parseOpenAIStream } from '@/utils/openAI'
 import { verifySignature } from '@/utils/auth'
-const demoKey = import.meta.env.DEMOKEY;
+const defaultAPIKey = import.meta.env.DEFAULT_API_KEY || '';
 import prompts from "@/prompts"
 
 const baseUrl = 'https://api.siliconflow.cn';
-
-
 
 // cloudflare pages 不支持node方法，简单的粗算
 function countTokens(str: string) {
@@ -28,18 +26,18 @@ export const post: APIRoute = async (context) => {
     return new Response('No input text')
   }
 
-  let sk = setting.openaiAPIKey || demoKey;
+  // 优先使用用户提供的 API Key，如果没有则使用默认 API Key
+  let apiKey = setting.openaiAPIKey || defaultAPIKey;
 
- 
-  if (sk == demoKey) {
-    return new Response("🙏 请看下方 告示 ，并在 拈花 处填入 API KEY")
+  // 如果既没有用户提供的 API Key 也没有默认 API Key，返回错误提示
+  if (!apiKey) {
+    return new Response("🙏 请看下方【告示】或联系管理员配置默认 API Key")
   }
 
   const prompt = prompts.find((item) => item.role == setting.role)?.prompt || setting.customRule;
   let reqMessages = [];
-  // 保留message的最近8条,第一套的权重最终
 
-  const maxToken = 4000 - countTokens(prompt) - countTokens(messages[messages.length - 1].content)
+  const maxToken = 5000 - countTokens(prompt) - countTokens(messages[messages.length - 1].content)
 
   let j = 0;
   let len = 0;
@@ -51,7 +49,7 @@ export const post: APIRoute = async (context) => {
       continue;
     }
     len += countTokens(msg.content);
-    if (i > messages.length - 6) {
+    if (i > messages.length - 15) {
       reqMessages.unshift(msg)
       continue;
     }
@@ -73,13 +71,19 @@ export const post: APIRoute = async (context) => {
     })
   }
 
-  const initOptions = generatePayload(sk, 0.8, reqMessages);
+  const initOptions = generatePayload(apiKey, 0.8, reqMessages);
   // @ts-ignore
   let response = new Response();
 
   try {
     response = await fetch(`${baseUrl}/v1/chat/completions`, initOptions) as Response;
     if (response.status > 400) {
+      // 专门处理余额不足或限额超出的错误
+      if (response.status === 402 || response.statusText.includes('insufficient')) {
+        return new Response("🙏 默认 API Key 余额不足或被限制，请看下方【告示】")
+      } else if (response.status === 429) {
+        return new Response("🙏 当前系统负载过高或 API Key 限额已达上限，请在看下方【告示】")
+      }
       throw new Error(`${response.status}:${response.statusText}`);
     }
   } catch (error) {
@@ -88,8 +92,6 @@ export const post: APIRoute = async (context) => {
 
   return new Response(parseOpenAIStream(response))
 }
-
-
 
 export const get: APIRoute = async (context) => {
   const roles = prompts.filter((item) => {
