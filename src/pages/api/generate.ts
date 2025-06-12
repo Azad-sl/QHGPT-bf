@@ -82,12 +82,12 @@ export const post: APIRoute = async (context) => {
       if (response.status === 402 || response.statusText.includes('insufficient')) {
         return new Response("🙏 默认 API Key 余额不足或被限制，请看下方【告示】")
       } else if (response.status === 429) {
-        return new Response("🙏 当前系统负载过高或 API Key 限额已达上限，请在看下方【告示】")
+        return new Response("🙏 当前系统负载过高或 API Key 限额已达上限，请看下方【告示】")
       }
       throw new Error(`${response.status}:${response.statusText}`);
     }
   } catch (error) {
-    return new Response(`⚠️OpenAi server response error ${error}`)
+    return new Response(`🙏 当前请求量过多，请稍后重试，或看下方【告示】 ${error}`)
   }
 
   return new Response(parseOpenAIStream(response))
