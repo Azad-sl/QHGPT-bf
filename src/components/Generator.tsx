@@ -100,8 +100,6 @@ export default () => {
     requestWithLatestMessage();
   };
 
-  // 移除自动滚动功能
-  // 原来的throttle函数被移除了
 
   const requestWithLatestMessage = async () => {
     setLoading(true);
@@ -232,7 +230,7 @@ export default () => {
     
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = 'chat_export.md';
+    link.download = '却惑几菩提-对话记录.md';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
