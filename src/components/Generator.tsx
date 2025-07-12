@@ -222,9 +222,17 @@ export default () => {
   // 导出为Markdown的功能
   const exportToMarkdown = () => {
     const markdownLines = messageList().map(message => {
+      // 直接判断角色名并替换
+      if (message.role === 'assistant') {
+        return `**却惑几菩提:** ${message.content}`;
+      }
+      if (message.role === 'user') {
+        return `**善知识:** ${message.content}`;
+      }
+      // 对于其他可能的角色，保持原样
       return `**${message.role}:** ${message.content}`;
     });
-
+ 
     const markdown = markdownLines.join('\n\n');
     const blob = new Blob([markdown], { type: 'text/markdown' });
     
