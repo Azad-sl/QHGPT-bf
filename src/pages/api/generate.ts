@@ -8,7 +8,7 @@ import prompts from "@/prompts"
 const PROVIDER_CONFIG = {
   'siliconflow': {
     baseUrl: 'https://api.siliconflow.cn/v1/chat/completions',
-    model: 'deepseek-ai/DeepSeek-V3',
+    model: 'deepseek-ai/DeepSeek-V3.1-Terminus',
   },
   '302ai': {
     baseUrl: 'https://api.302.ai/v1/chat/completions',
@@ -131,3 +131,4 @@ export const get: APIRoute = async (context) => {
     }
   })
 }
+
