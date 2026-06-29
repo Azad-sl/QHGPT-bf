@@ -12,8 +12,8 @@ export const generatePayload = (apiKey: string, temperature :number, messages: C
     model: model, // 修改：使用传入的 model 参数
     messages,
     temperature: temperature,
-    presence_penalty:1,
-    frequency_penalty:1,
+    presence_penalty:0.3,
+    frequency_penalty:0.3,
     stream: true,
     enable_thinking: false,
   }),
