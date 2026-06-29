@@ -138,13 +138,13 @@ export default () => {
         throw new Error('No data');
       }
       const reader = data.getReader();
-      const decoder = new TextDecoder('utf-8');
-      let done = false;
-
-      while (!done) {
-        const { value, done: readerDone } = await reader.read();
-        if (value) {
-          let char = decoder.decode(value);
+     const decoder = new TextDecoder('utf-8');
+let done = false;
+ 
+while (!done) {
+  const { value, done: readerDone } = await reader.read();
+  if (value) {
+    let char = decoder.decode(value, { stream: true });
           if (char === '\n' && currentAssistantMessage().endsWith('\n')) {
             continue;
           }
@@ -155,6 +155,11 @@ export default () => {
         }
         done = readerDone;
       }
+      // 流结束，冲刷 decoder 中可能残留的不完整字节
+  const tail = decoder.decode();
+  if (tail) {
+    setCurrentAssistantMessage(currentAssistantMessage() + tail);
+  }
     } catch (e) {
       setLoading(false);
       setController(null);
