@@ -8,11 +8,11 @@ import prompts from "@/prompts"
 const PROVIDER_CONFIG = {
   'siliconflow': {
     baseUrl: 'https://api.siliconflow.cn/v1/chat/completions',
-    model: 'Qwen/Qwen3-235B-A22B',  // 硅基流动用 Qwen3
+    model: 'Qwen/Qwen3.5-397B-A17B',    // Qwen3.5 旗舰
   },
   '302ai': {
     baseUrl: 'https://api.302.ai/v1/chat/completions',
-    model: 'claude-sonnet-4-20250514',  // 302.AI 用 Claude
+    model: 'claude-sonnet-4-20250514',   // Claude Sonnet
   }
 };
 
