@@ -57,7 +57,7 @@ export const post: APIRoute = async (context) => {
   const prompt = prompts.find((item) => item.role == setting.role)?.prompt || setting.customRule;
   let reqMessages = [];
 
-const maxToken = 8000 - countTokens(prompt) - countTokens(messages[messages.length - 1].content)
+const maxToken = 12000 - countTokens(prompt) - countTokens(messages[messages.length - 1].content)
  
 
 let totalLen = 0;
