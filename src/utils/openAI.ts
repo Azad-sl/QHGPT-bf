@@ -44,9 +44,12 @@ export const parseOpenAIStream = (rawResponse: Response) => {
       }
 
       const parser = createParser(streamParser)
-      for await (const chunk of rawResponse.body as any) {
-        parser.feed(decoder.decode(chunk))
-      }
+for await (const chunk of rawResponse.body as any) {
+  // stream: true 告诉 decoder：这可能是流中的片段，遇到不完整的字节先缓冲，别输出乱码
+  parser.feed(decoder.decode(chunk, { stream: true }))
+}
+// 流结束时，把可能残留的字节冲出来
+parser.feed(decoder.decode())
     },
   })
 
