@@ -57,39 +57,31 @@ export const post: APIRoute = async (context) => {
   const prompt = prompts.find((item) => item.role == setting.role)?.prompt || setting.customRule;
   let reqMessages = [];
 
-  const maxToken = 5000 - countTokens(prompt) - countTokens(messages[messages.length - 1].content)
-
-  let j = 0;
-  let len = 0;
-  // 遍历历史消息，如果消息
-  for (let i = messages.length - 1; i >= 0; i--) {
-    const msg = messages[i];
-    const lastContent = messages[i + 1] ? messages[i + 1].content : ''
-    if (msg.content == lastContent) {
-      continue;
-    }
-    len += countTokens(msg.content);
-    if (i > messages.length - 15) {
-      reqMessages.unshift(msg)
-      continue;
-    }
-    j++;
-    if (j > 10 || len > maxToken) {
-      break;
-    }
-    reqMessages.unshift(msg)
-  }
-
-  const fm = messages[0]
-  if (fm.role == "user" && reqMessages[0].content != fm.content && fm.content.length > 20) {
-    reqMessages.unshift(fm)
-  }
-  if (prompt) {
-    reqMessages.unshift({
-      role: "system",
-      content: prompt,
-    })
-  }
+const maxToken = 8000 - countTokens(prompt) - countTokens(messages[messages.length - 1].content)
+ 
+let reqMessages = [];
+let totalLen = 0;
+ 
+// 从最新消息往前遍历，直到超限
+for (let i = messages.length - 1; i >= 0; i--) {
+  const msg = messages[i];
+  // 跳过连续重复的消息
+  const prevContent = reqMessages.length > 0 ? reqMessages[0].content : '';
+  if (msg.content === prevContent) continue;
+ 
+  totalLen += countTokens(msg.content);
+  if (totalLen > maxToken) break;
+ 
+  reqMessages.unshift(msg);
+}
+ 
+// 始终保留 system prompt
+if (prompt) {
+  reqMessages.unshift({
+    role: "system",
+    content: prompt,
+  })
+}
 
   // 修改：传入动态的模型名称
   const initOptions = generatePayload(apiKey, 0.8, reqMessages, config.model);
