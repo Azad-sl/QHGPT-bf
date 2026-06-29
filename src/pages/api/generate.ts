@@ -84,7 +84,7 @@ if (prompt) {
 }
 
   // 修改：传入动态的模型名称
-  const initOptions = generatePayload(apiKey, 0.8, reqMessages, config.model);
+  const initOptions = generatePayload(apiKey, 0.7, reqMessages, config.model);
   
   // @ts-ignore
   let response = new Response();
