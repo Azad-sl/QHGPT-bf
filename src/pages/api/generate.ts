@@ -59,7 +59,7 @@ export const post: APIRoute = async (context) => {
 
 const maxToken = 8000 - countTokens(prompt) - countTokens(messages[messages.length - 1].content)
  
-let reqMessages = [];
+
 let totalLen = 0;
  
 // 从最新消息往前遍历，直到超限
