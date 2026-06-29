@@ -15,6 +15,7 @@ export const generatePayload = (apiKey: string, temperature :number, messages: C
     presence_penalty:1,
     frequency_penalty:1,
     stream: true,
+    enable_thinking: false,
   }),
 })
 
